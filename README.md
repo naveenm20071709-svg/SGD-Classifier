@@ -23,46 +23,53 @@ Program to implement the prediction of iris species using SGD Classifier.
 Developed by: Naveen M
 RegisterNumber:212225230198
 
-# Import libraries
+import pandas as pd
+
 from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+
 from sklearn.linear_model import SGDClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, classification_report
 
-# Load dataset
+from sklearn.model_selection import train_test_split
+
+from sklearn.metrics import accuracy_score, confusion_matrix,classification_report
+
 iris = load_iris()
-X = iris.data
-y = iris.target
 
-# Feature scaling (important for SGD)
-scaler = StandardScaler()
-X = scaler.fit_transform(X)
+df = pd.DataFrame(data = iris.data, columns = iris.feature_names)
 
-# Split dataset
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
+df['target'] = iris.target
 
-# Create SGD Classifier
-model = SGDClassifier(max_iter=1000, random_state=42)
+print(df.head())
 
-# Train model
-model.fit(X_train, y_train)
+x = df.iloc[:, :-1]
 
-# Predict
-y_pred = model.predict(X_test)
+y = df['target']
 
-# Accuracy
-print("Accuracy:", accuracy_score(y_test, y_pred))
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 1/4, random_state = 42)
 
-# Detailed report
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
+sgd_clf = SGDClassifier(max_iter=1000, tol=1e-3)
+
+sgd_clf.fit(x_train, y_train)
+
+y_pred = sgd_clf.predict(x_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Accuracy :",accuracy)
+
+cm = confusion_matrix(y_test, y_pred)
+
+print("Confusion Matrix : \n",cm)
+
+report = classification_report(y_test, y_pred, target_names=iris.target_names)
+
+print("\nClassification Report:\n", report)
 */
 ```
 
 ## Output:
-<img width="663" height="291" alt="Screenshot 2026-05-13 111848" src="https://github.com/user-attachments/assets/7a003138-d287-4149-a7ef-6f5b867efea0" />
+
+<img width="835" height="647" alt="image" src="https://github.com/user-attachments/assets/7482a1c1-4188-4c3a-b654-d3efb0a46b67" />
 
 
 
